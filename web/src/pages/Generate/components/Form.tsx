@@ -1,15 +1,18 @@
-import { FormEvent, useRef } from "react"
+import { FormEvent, useRef, useState } from "react"
 import * as RadixForm from "@radix-ui/react-form"
 
 import { FormItem } from "./FormItem"
 import { api } from "../../../lib/axios"
+import { Loading } from "./Loading"
 
 export function Form() {
+  const [loading, setLoading] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
 
+    setLoading(true)
     // This is an uncontrolled component, so I'm grabbing the data from the form
     // when I need them, that is, when the user clicks on the "Generate Image" button.
     const formData = new FormData(formRef.current!)
@@ -31,6 +34,8 @@ export function Form() {
       location.href = imageURL
     } catch (error) {
       console.log(error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -58,8 +63,11 @@ export function Form() {
         />
       </RadixForm.Field>
       <RadixForm.Submit asChild>
-        <button className="bg-violet-500 text-white rounded p-2 hover:bg-violet-400 focus:ring focus:ring-violet-500 outline-none transition-colors">
-          Generate Image
+        <button
+          disabled={loading}
+          className="flex items-center justify-center bg-violet-500 text-white rounded p-2 hover:bg-violet-400 focus:ring focus:ring-violet-500 outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {loading ? <Loading /> : <span>Generate Image</span>}
         </button>
       </RadixForm.Submit>
     </RadixForm.Root>
