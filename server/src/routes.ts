@@ -16,7 +16,7 @@ export async function appRoutes(app: FastifyInstance) {
 
       const { name, linkedinURL, githubURL } = bodySchema.parse(request.body)
 
-      const url = `http://${host}/${name}?linkedin=${linkedinURL}&github=${githubURL}`
+      const url = `${host}/${name}?linkedin=${linkedinURL}&github=${githubURL}`
       const code = await generateQRCode(url)
 
       return {
